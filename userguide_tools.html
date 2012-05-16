@@ -1,0 +1,201 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tools &mdash; rat v0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="rat v0.1 documentation" href="index.html" />
+    <link rel="up" title="User’s Guide" href="userguide.html" />
+    <link rel="next" title="Port Progress" href="progress.html" />
+    <link rel="prev" title="Overview" href="userguide_overview.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="progress.html" title="Port Progress"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="userguide_overview.html" title="Overview"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">rat v0.1 documentation</a> &raquo;</li>
+          <li><a href="userguide.html" accesskey="U">User&#8217;s Guide</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tools">
+<h1>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ratinfo">
+<h2>ratinfo<a class="headerlink" href="#ratinfo" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">ratinfo</span></tt> command line program that collects various simple tools for extracting information from output ROOT files produced by the outroot.  It saves you the trouble of having to write a full-blown ROOT macro to get some pieces of information.</p>
+<p><strong>log</strong>:</p>
+<div class="highlight-python"><pre>ratinfo log [rootfile]</pre>
+</div>
+<p>Prints the log contents from the RAT session that produced this output ROOT file.</p>
+<p><strong>macro</strong>:</p>
+<div class="highlight-python"><pre>ratinfo macro [rootfile]</pre>
+</div>
+<p>Prints the RAT macro commands that produced this output ROOT file.  Does not include any commands typed interactively.</p>
+<p><strong>db</strong>:</p>
+<div class="highlight-python"><pre>ratinfo db [rootfile]</pre>
+</div>
+<p>Prints a full trace of all the RATDB values that were accessed during the RAT job that produced this file.  The trace is actually a valid RATDB file with a validity range set to &#8220;user override&#8221; that can be redirected to a file and used in another job.</p>
+<p>Example output fragment:</p>
+<div class="highlight-python"><pre>drl129:rat-trunk stan$ ratinfo db miniCLEAN_20keV_shellfit.root
+
+{
+  name: "PMT",
+  index: "r1408",
+  valid_begin: [-1, -1],
+  valid_end: [-1, -1],
+
+  pmt_vacuum_material: "pmt_vacuum",
+  dynode_top: -30,
+  [snip, snip]</pre>
+</div>
+<p><strong>status</strong>:</p>
+<div class="highlight-python"><pre>ratinfo status [rootfile1] [rootfile2] [...]</pre>
+</div>
+<p>Prints the filename and status description for one or more output ROOT files.  Example:</p>
+<div class="highlight-python"><pre>drl129:rat-trunk stan$ ratinfo status miniCLEAN_20keV_shellfit.root
+miniCLEAN_20keV_shellfit.root: ABORT</pre>
+</div>
+<p>The possible status codes are:</p>
+<dl class="docutils">
+<dt>OK</dt>
+<dd>Job ran to completion</dd>
+<dt>ABORT</dt>
+<dd>Job was aborted partway through by user pressing Ctrl-C once.  File was closed properly, but may have fewer events than requested in macro file.</dd>
+<dt>CRASH</dt>
+<dd>Job was terminated ungracefully using multiple Ctrl-C or possibly a segmentation fault.  The output file was not closed and may produce ROOT warnings.</dd>
+<dt>UNKNOWN</dt>
+<dd>The status value stored in the file has an unexpected value.  The file might have been produced by a newer RAT version.</dd>
+<dt>UNSUPPORTED</dt>
+<dd>This ROOT file contains no status information.  It either was not created by RAT, or was created by a very old version.</dd>
+<dt>NOTROOT</dt>
+<dd>The file specified on the command line is not a ROOT file at all.</dd>
+</dl>
+<p><strong>var</strong>:</p>
+<div class="highlight-python"><pre>ratinfo var [rootfile] [expression] [optional:cut]</pre>
+</div>
+<p>Scan through the events in a ROOT file and print the mean, standard deviation and uncertainty on the mean for a given selector expression.  If the optional cut is supplied, then only events where the cut expression evaluates to true are accumulated.  The uncertainty on the mean is defined to be:
+$$ Delta bar{x} =  frac{bar{x}}{sqrt{sigma_x}}. $$</p>
+<p>The expression and cut syntax is exactly that of the TTree::Draw() command, but the expression should evaluate to a 1D histogram.  For example, one can request a simple variable:</p>
+<div class="highlight-python"><pre>drl129:rat-trunk stan$ ratinfo var miniCLEAN_20keV_shellfit.root numPE
+selector = "numPE", cut = ""
+# of events = 106
+mean = 116.669811, rms = 11.456828, uncert_mean = 1.112785</pre>
+</div>
+<p>or a more complex expression:</p>
+<div class="highlight-python"><pre>drl129:rat-trunk stan$ ratinfo var miniCLEAN_20keV_shellfit.root numPE 'numPE/particle.ke'
+selector = "numPE", cut = "numPE/particle.ke"
+# of events = 106
+mean = 117.794857, rms = 11.618573, uncert_mean = 1.128496</pre>
+</div>
+<p>It is usually a good idea to enclose expressions with symbols in single quotes to protect them from interpretation by the shell.</p>
+<p>The number of events printed is the number of events passing the cut expression.  Using the same file as above:</p>
+<div class="highlight-python"><pre>drl129:rat-trunk stan$ ratinfo var miniCLEAN_20keV_shellfit.root numPE 'numPE&gt;105'
+selector = "numPE", cut = "numPE&gt;105"
+# of events = 87
+mean = 120.126437, rms = 9.472045, uncert_mean = 1.015510</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tools</a><ul>
+<li><a class="reference internal" href="#ratinfo">ratinfo</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="userguide_overview.html"
+                        title="previous chapter">Overview</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="progress.html"
+                        title="next chapter">Port Progress</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/userguide_tools.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="progress.html" title="Port Progress"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="userguide_overview.html" title="Overview"
+             >previous</a> |</li>
+        <li><a href="index.html">rat v0.1 documentation</a> &raquo;</li>
+          <li><a href="userguide.html" >User&#8217;s Guide</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Andy Mastbaum.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

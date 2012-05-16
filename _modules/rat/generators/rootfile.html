@@ -1,0 +1,139 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>rat.generators.rootfile &mdash; rat v0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="rat v0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">rat v0.1 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for rat.generators.rootfile</h1><div class="highlight"><pre>
+<span class="sd">&#39;&#39;&#39;Utilities for reading from TTrees in ROOT files.&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">rat.core</span> <span class="kn">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="tree_reader"><a class="viewcode-back" href="../../../generators.html#rat.generators.rootfile.tree_reader">[docs]</a><span class="k">def</span> <span class="nf">tree_reader</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Read data from the branch named `branch` of a ROOT tree named `tree`</span>
+<span class="sd">    in a file `filename`. `obj` is a &quot;reference&quot; to an object of the type</span>
+<span class="sd">    stored in the tree (cf. `SetBranchAddress(branch, &amp;obj)`).</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">tree</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TChain</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">SetBranchAddress</span><span class="p">(</span><span class="n">branch</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+    <span class="n">total_events</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">GetEntries</span><span class="p">()</span>
+    <span class="n">event_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="n">event_count</span> <span class="o">&lt;</span> <span class="n">total_events</span><span class="p">:</span>
+        <span class="n">tree</span><span class="o">.</span><span class="n">GetEntry</span><span class="p">(</span><span class="n">event_count</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">obj</span>
+        <span class="n">event_count</span> <span class="o">+=</span> <span class="mi">1</span>
+</div>
+<div class="viewcode-block" id="dsreader"><a class="viewcode-back" href="../../../generators.html#rat.generators.rootfile.dsreader">[docs]</a><span class="k">def</span> <span class="nf">dsreader</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Read events from a RAT ROOT file</span>
+
+<span class="sd">    Returns an iterator over the DS objects in the `T` tree in file `filename`.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">rec</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">RAT</span><span class="o">.</span><span class="n">DS</span><span class="o">.</span><span class="n">Root</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">tree_reader</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;T&#39;</span><span class="p">,</span> <span class="s">&#39;ds&#39;</span><span class="p">,</span> <span class="n">rec</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">o</span>
+</div>
+<div class="viewcode-block" id="packed_dsreader"><a class="viewcode-back" href="../../../generators.html#rat.generators.rootfile.packed_dsreader">[docs]</a><span class="k">def</span> <span class="nf">packed_dsreader</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Read events from a packed ROOT file</span>
+
+<span class="sd">    Returns an iterator over the PackedRec objects in the `PackT` tree in file</span>
+<span class="sd">    `filename`.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">rec</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">RAT</span><span class="o">.</span><span class="n">DS</span><span class="o">.</span><span class="n">PackedRec</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">tree_reader</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;PackT&#39;</span><span class="p">,</span> <span class="s">&#39;PackRec&#39;</span><span class="p">,</span> <span class="n">rec</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">o</span>
+</div>
+<div class="viewcode-block" id="airfill_dsreader"><a class="viewcode-back" href="../../../generators.html#rat.generators.rootfile.airfill_dsreader">[docs]</a><span class="k">def</span> <span class="nf">airfill_dsreader</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Read events from an air-fill style packed ROOT file</span>
+
+<span class="sd">    Returns an iterator over the PackedEvent objects in the `PackEv` tree in</span>
+<span class="sd">    file `filename`.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">rec</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">RAT</span><span class="o">.</span><span class="n">DS</span><span class="o">.</span><span class="n">PackedEvent</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">tree_reader</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;PackT&#39;</span><span class="p">,</span> <span class="s">&#39;PackEv&#39;</span><span class="p">,</span> <span class="n">rec</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">o</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">rat v0.1 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Andy Mastbaum.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

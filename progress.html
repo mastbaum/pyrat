@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Port Progress &mdash; rat v0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="rat v0.1 documentation" href="index.html" />
+    <link rel="next" title="Code Documentation" href="code.html" />
+    <link rel="prev" title="Tools" href="userguide_tools.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="code.html" title="Code Documentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="userguide_tools.html" title="Tools"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">rat v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="port-progress">
+<h1>Port Progress<a class="headerlink" href="#port-progress" title="Permalink to this headline">¶</a></h1>
+<p>A summary of tasks remaining for porting RAT to Python. Only parts that are generally useful will be ported; experiment-specific packages will extend RAT to fill in the rest.</p>
+<div class="section" id="to-do">
+<h2>To-do<a class="headerlink" href="#to-do" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="bin">
+<h3>bin<a class="headerlink" href="#bin" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>rat: similar to chroma-sim</li>
+</ul>
+</div>
+<div class="section" id="data">
+<h3>data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h3>
+<p>Convert to strict JSON.</p>
+</div>
+<div class="section" id="test">
+<h3>test<a class="headerlink" href="#test" title="Permalink to this headline">¶</a></h3>
+<p>Update macros.</p>
+</div>
+<div class="section" id="src-core">
+<h3>src/core<a class="headerlink" href="#src-core" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>BurstProc: supernova burst trigger, should go in processors</li>
+<li>CutProc: depends on DS</li>
+<li>EventInfo: exists only to contain a DS::Calib object? why in core?</li>
+<li>Gsim, GLG4*: replaced by g4py interface</li>
+<li>PruneProc: depends on DS</li>
+<li>RunManager</li>
+<li>Version: easy</li>
+</ul>
+</div>
+<div class="section" id="src-daq">
+<h3>src/daq<a class="headerlink" href="#src-daq" title="Permalink to this headline">¶</a></h3>
+<p>All heavily dependent on DS. This should be modular.</p>
+</div>
+<div class="section" id="src-db">
+<h3>src/db<a class="headerlink" href="#src-db" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>DBLink</li>
+</ul>
+</div>
+<div class="section" id="src-ds">
+<h3>src/ds<a class="headerlink" href="#src-ds" title="Permalink to this headline">¶</a></h3>
+<p>Seriously need to figure something out here.</p>
+</div>
+<div class="section" id="src-fit">
+<h3>src/fit<a class="headerlink" href="#src-fit" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>FitterProcessor, framework bits</li>
+</ul>
+</div>
+<div class="section" id="src-gen">
+<h3>src/gen<a class="headerlink" href="#src-gen" title="Permalink to this headline">¶</a></h3>
+<p>These will be re-implemented as python generators. For Decay0, generate a wrapper with f2py.</p>
+</div>
+<div class="section" id="src-geo">
+<h3>src/geo<a class="headerlink" href="#src-geo" title="Permalink to this headline">¶</a></h3>
+<p>How to flip between G4 CSG and chroma meshes?</p>
+</div>
+<div class="section" id="src-io">
+<h3>src/io<a class="headerlink" href="#src-io" title="Permalink to this headline">¶</a></h3>
+<p>These depend on input and output DS.</p>
+<ul class="simple">
+<li>DispatchEvents</li>
+<li>G4Stream: copy mute from chroma, move to core</li>
+<li>InNetProducer</li>
+<li>OutNetProc</li>
+<li>OutROOTProc</li>
+<li>Pack</li>
+<li>PackEvents</li>
+<li>TrackCursor, TrackNav, TrackNode</li>
+</ul>
+</div>
+<div class="section" id="src-physics">
+<h3>src/physics<a class="headerlink" href="#src-physics" title="Permalink to this headline">¶</a></h3>
+<p>Perhaps some of this will stay in C++.</p>
+<ul class="simple">
+<li>EmPhysicsListV*</li>
+<li>G4Cerenkov</li>
+<li>GLG4NeutronDiffusionAndCapture</li>
+<li>GLG4OpAttenuation</li>
+<li>GLG4PMTOpticalModel: deprecated</li>
+<li>GLG4Scint</li>
+<li>HadronicPhysicsListV*</li>
+<li>PhotonThinning</li>
+<li>PhysicsList</li>
+</ul>
+</div>
+<div class="section" id="src-util">
+<h3>src/util<a class="headerlink" href="#src-util" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>BitManip: mostly trivial, maybe do not port</li>
+<li>Factory</li>
+<li>getopt - replace with python optparse</li>
+</ul>
+</div>
+</div>
+<div class="section" id="done">
+<h2>Done<a class="headerlink" href="#done" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>bin<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>ratci: unchanged</li>
+<li>ratdb: unchanged</li>
+<li>ratinfo: unchanged</li>
+<li>rattest: unchanged</li>
+</ul>
+</div>
+<div class="section" id="src-calib">
+<h3>src/calib<a class="headerlink" href="#src-calib" title="Permalink to this headline">¶</a></h3>
+<p>Mostly experiment-specific, will not be ported into main project.</p>
+</div>
+<div class="section" id="src-cmd">
+<h3>src/cmd<a class="headerlink" href="#src-cmd" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Messengers: trivial when macros are python scripts</li>
+<li>ProcBlockManager: done &#8211; rat.core.processor</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h3>src/core<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>CountProc: done &#8211; rat.processors.stats</li>
+<li>Log: done &#8211; replaced with python logging module, rat.core.log</li>
+<li>ProcBlock: done &#8211; rat.core.processor</li>
+<li>Processor: done &#8211; rat.core.processor</li>
+<li>Producer: replaced by python generators</li>
+<li>SignalHandler: done &#8211; signal module, rat.core.signal_handler</li>
+<li>Trajectory: needed on top of g4 tracking?</li>
+<li>WriteVarProc: deprecated in RAT, depends on DS</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h3>src/db<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>DB: done? &#8211; dict subclass, rat.core.ratdb</li>
+<li>DBExceptions: done &#8211; use python exceptions</li>
+<li>DBFieldCallback: done? &#8211; did this ever work in rat?</li>
+<li>DBJsonLoader: done &#8211; json module</li>
+<li>DBTable: done &#8211; dict subclass, rat.core.ratdb</li>
+<li>DBTextLoader: deprecated, will not port</li>
+<li>HTTPDownloader: use httplib + json</li>
+<li>json_*: replaced by json module</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h3>src/fit<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>QPDF: deprecated, will not port</li>
+<li>FitLike: deprecated, will not port</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h3>src/io<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>DSReader: done &#8211; rat.generators.rootfile</li>
+<li>FillRCHProc: deprecated, will not port</li>
+<li>InDispatchProducer: wip &#8211; rat.generators.dispatch</li>
+<li>InPackedProducer: done &#8211; rat.generators.rootfile</li>
+<li>InROOTProducer: done &#8211; rat.generators.rootfile</li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h3>src/util<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Extensible: deprecated</li>
+<li>HashFunc: use hash() builtin or hashlib</li>
+<li>LinearInterp: use numpy.interp</li>
+<li>MultivariateInterp: use numpy.interp</li>
+<li>RadicalInverse: rat.util.math.radical_inverse</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Port Progress</a><ul>
+<li><a class="reference internal" href="#to-do">To-do</a><ul>
+<li><a class="reference internal" href="#bin">bin</a></li>
+<li><a class="reference internal" href="#data">data</a></li>
+<li><a class="reference internal" href="#test">test</a></li>
+<li><a class="reference internal" href="#src-core">src/core</a></li>
+<li><a class="reference internal" href="#src-daq">src/daq</a></li>
+<li><a class="reference internal" href="#src-db">src/db</a></li>
+<li><a class="reference internal" href="#src-ds">src/ds</a></li>
+<li><a class="reference internal" href="#src-fit">src/fit</a></li>
+<li><a class="reference internal" href="#src-gen">src/gen</a></li>
+<li><a class="reference internal" href="#src-geo">src/geo</a></li>
+<li><a class="reference internal" href="#src-io">src/io</a></li>
+<li><a class="reference internal" href="#src-physics">src/physics</a></li>
+<li><a class="reference internal" href="#src-util">src/util</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#done">Done</a><ul>
+<li><a class="reference internal" href="#id1">bin</a></li>
+<li><a class="reference internal" href="#src-calib">src/calib</a></li>
+<li><a class="reference internal" href="#src-cmd">src/cmd</a></li>
+<li><a class="reference internal" href="#id2">src/core</a></li>
+<li><a class="reference internal" href="#id3">src/db</a></li>
+<li><a class="reference internal" href="#id4">src/fit</a></li>
+<li><a class="reference internal" href="#id5">src/io</a></li>
+<li><a class="reference internal" href="#id6">src/util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="userguide_tools.html"
+                        title="previous chapter">Tools</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="code.html"
+                        title="next chapter">Code Documentation</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/progress.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="code.html" title="Code Documentation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="userguide_tools.html" title="Tools"
+             >previous</a> |</li>
+        <li><a href="index.html">rat v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Andy Mastbaum.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,395 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>RAT Core &mdash; rat v0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="rat v0.1 documentation" href="index.html" />
+    <link rel="up" title="Code Documentation" href="code.html" />
+    <link rel="next" title="Processors" href="processors.html" />
+    <link rel="prev" title="Code Documentation" href="code.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="processors.html" title="Processors"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="code.html" title="Code Documentation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">rat v0.1 documentation</a> &raquo;</li>
+          <li><a href="code.html" accesskey="U">Code Documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="rat-core">
+<h1>RAT Core<a class="headerlink" href="#rat-core" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-log">
+<span id="rat-core-log"></span><h2>rat.core.log<a class="headerlink" href="#module-log" title="Permalink to this headline">¶</a></h2>
+<p>Facilities for logging to files and output streams.</p>
+</div>
+<div class="section" id="module-processor">
+<span id="rat-core-processor"></span><h2>rat.core.processor<a class="headerlink" href="#module-processor" title="Permalink to this headline">¶</a></h2>
+<p>Processor-related classes.</p>
+<dl class="class">
+<dt id="processor.Processor">
+<em class="property">class </em><tt class="descclassname">processor.</tt><tt class="descname">Processor</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/processor.html#Processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processor.Processor" title="Permalink to this definition">¶</a></dt>
+<dd><p>A processor represents a chunk of analysis code that can be placed in
+the event loop.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; The name of the processor</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="processor.Processor.end_run">
+<tt class="descname">end_run</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/processor.html#Processor.end_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processor.Processor.end_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called once at the end of a run.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="processor.Processor.event">
+<tt class="descname">event</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="_modules/processor.html#Processor.event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processor.Processor.event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called for every event.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ev</strong> &#8211; The event</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="processor.Processor.start_run">
+<tt class="descname">start_run</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/processor.html#Processor.start_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processor.Processor.start_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called once at the start of a run.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="processor.ProcessorAbort">
+<em class="property">exception </em><tt class="descclassname">processor.</tt><tt class="descname">ProcessorAbort</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/processor.html#ProcessorAbort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processor.ProcessorAbort" title="Permalink to this definition">¶</a></dt>
+<dd><p>When raised by a processor, processing of this event is immediately
+terminated and no further processors are run on this event.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="processor.ProcessorBlock">
+<em class="property">class </em><tt class="descclassname">processor.</tt><tt class="descname">ProcessorBlock</tt><a class="reference internal" href="_modules/processor.html#ProcessorBlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processor.ProcessorBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>A processor block is a list of processors which are each called for
+every event.</p>
+<dl class="method">
+<dt id="processor.ProcessorBlock.end_run">
+<tt class="descname">end_run</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/processor.html#ProcessorBlock.end_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processor.ProcessorBlock.end_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call the <cite>end_run</cite> methods for all processors in the block.
+Called at the end of a run.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="processor.ProcessorBlock.event">
+<tt class="descname">event</tt><big>(</big><em>ev</em><big>)</big><a class="reference internal" href="_modules/processor.html#ProcessorBlock.event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processor.ProcessorBlock.event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call the <cite>event</cite> methods of all processors in the block. Called
+once per event.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ev</strong> &#8211; The event</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="processor.ProcessorBlock.start_run">
+<tt class="descname">start_run</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/processor.html#ProcessorBlock.start_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processor.ProcessorBlock.start_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call the <cite>start_run</cite> methods for all processors in the block.
+Called at the start of a run.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="processor.ProcessorFail">
+<em class="property">exception </em><tt class="descclassname">processor.</tt><tt class="descname">ProcessorFail</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/processor.html#ProcessorFail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#processor.ProcessorFail" title="Permalink to this definition">¶</a></dt>
+<dd><p>When raised by a processor, signifies that the processor task failed,
+but later processors are still executed.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ratdb">
+<span id="rat-core-ratdb"></span><h2>rat.core.ratdb<a class="headerlink" href="#module-ratdb" title="Permalink to this headline">¶</a></h2>
+<p>Utilties for accessing the database.</p>
+<dl class="class">
+<dt id="ratdb.DB">
+<em class="property">class </em><tt class="descclassname">ratdb.</tt><tt class="descname">DB</tt><a class="reference internal" href="_modules/ratdb.html#DB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ratdb.DB" title="Permalink to this definition">¶</a></dt>
+<dd><p>RATDB is the database of constants used by RAT for all adjustable
+parameters, including physical properties of materials, detector geometry,
+calibration constants, lookup tables, and control parameters that specify
+how processing should be done.</p>
+<dl class="method">
+<dt id="ratdb.DB.add_table">
+<tt class="descname">add_table</tt><big>(</big><em>table</em>, <em>key=None</em><big>)</big><a class="reference internal" href="_modules/ratdb.html#DB.add_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ratdb.DB.add_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a <cite>DBTable</cite> to this database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>table</strong> &#8211; The table</li>
+<li><strong>key</strong> &#8211; <cite>(optional)</cite> Key of table. Computed automatically if not provided</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ratdb.DB.load_file">
+<tt class="descname">load_file</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/ratdb.html#DB.load_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ratdb.DB.load_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a table from a file and add it to this DB.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> &#8211; Name of file to read table from</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ratdb.DBTable">
+<em class="property">class </em><tt class="descclassname">ratdb.</tt><tt class="descname">DBTable</tt><big>(</big><em>table={}</em><big>)</big><a class="reference internal" href="_modules/ratdb.html#DBTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ratdb.DBTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Holds the contents of a RATDB table in memory.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>table</strong> &#8211; <cite>(optional)</cite> Dictionary from which to constuct the table</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="ratdb.DBTable.is_default">
+<tt class="descname">is_default</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ratdb.html#DBTable.is_default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ratdb.DBTable.is_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if validity range flags this as a default-plane table.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ratdb.DBTable.is_user">
+<tt class="descname">is_user</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ratdb.html#DBTable.is_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ratdb.DBTable.is_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if validity range flags this as a user-plane table.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ratdb.DBTable.is_valid_run">
+<tt class="descname">is_valid_run</tt><big>(</big><em>run</em><big>)</big><a class="reference internal" href="_modules/ratdb.html#DBTable.is_valid_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ratdb.DBTable.is_valid_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if this table is valid for the specified run.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>run</strong> &#8211; Run number to check</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ratdb.DBTable.register">
+<tt class="descname">register</tt><big>(</big><em>key</em>, <em>callback</em><big>)</big><a class="reference internal" href="_modules/ratdb.html#DBTable.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ratdb.DBTable.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a callback function, which will be called when the value of the
+specified key is modified. This may be used to reload database values
+in a processor, for example.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>key</strong> &#8211; Key to watch for changes</li>
+<li><strong>callback</strong> &#8211; Function to call when a change occurs</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ratdb.DBTable.save">
+<tt class="descname">save</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/ratdb.html#DBTable.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ratdb.DBTable.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save this table to a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> &#8211; Name of file to write table to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ratdb.DBTable.set_default">
+<tt class="descname">set_default</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ratdb.html#DBTable.set_default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ratdb.DBTable.set_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set this as a default table.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ratdb.DBTable.set_user">
+<tt class="descname">set_user</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ratdb.html#DBTable.set_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ratdb.DBTable.set_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set this as a user-override table.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-rootimport">
+<span id="rat-core-rootimport"></span><h2>rat.core.rootimport<a class="headerlink" href="#module-rootimport" title="Permalink to this headline">¶</a></h2>
+<p>Import ROOT-related modules.</p>
+</div>
+<div class="section" id="module-signal_handler">
+<span id="rat-core-signal-handler"></span><h2>rat.core.signal_handler<a class="headerlink" href="#module-signal_handler" title="Permalink to this headline">¶</a></h2>
+<p>Catch UNIX signal sende to the main application by the operating system.</p>
+<dl class="class">
+<dt id="signal_handler.SignalHandler">
+<em class="property">class </em><tt class="descclassname">signal_handler.</tt><tt class="descname">SignalHandler</tt><a class="reference internal" href="_modules/signal_handler.html#SignalHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#signal_handler.SignalHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle SIGINT gracefully: the first time sets a flags, giving
+processes time to clean up, while the second time terminates immediately.</p>
+<dl class="method">
+<dt id="signal_handler.SignalHandler.handler">
+<tt class="descname">handler</tt><big>(</big><em>signum</em>, <em>frame</em><big>)</big><a class="reference internal" href="_modules/signal_handler.html#SignalHandler.handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#signal_handler.SignalHandler.handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler function called by <cite>signal</cite> on the first <cite>SIGINT</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="signal_handler.SignalHandler.is_term_requested">
+<tt class="descname">is_term_requested</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/signal_handler.html#SignalHandler.is_term_requested"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#signal_handler.SignalHandler.is_term_requested" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if termination has been requested by a <cite>SIGINT</cite> signal.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="signal_handler.SignalHandler.sigint">
+<tt class="descname">sigint</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/signal_handler.html#SignalHandler.sigint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#signal_handler.SignalHandler.sigint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by <cite>handler</cite>. If this is the first Ctrl-C, set the signal
+pending flag and set future <a href="#id1"><span class="problematic" id="id2">`</span></a>SIGINT`s to actually terminate the
+program.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">RAT Core</a><ul>
+<li><a class="reference internal" href="#module-log">rat.core.log</a></li>
+<li><a class="reference internal" href="#module-processor">rat.core.processor</a></li>
+<li><a class="reference internal" href="#module-ratdb">rat.core.ratdb</a></li>
+<li><a class="reference internal" href="#module-rootimport">rat.core.rootimport</a></li>
+<li><a class="reference internal" href="#module-signal_handler">rat.core.signal_handler</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="code.html"
+                        title="previous chapter">Code Documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="processors.html"
+                        title="next chapter">Processors</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/core.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="processors.html" title="Processors"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="code.html" title="Code Documentation"
+             >previous</a> |</li>
+        <li><a href="index.html">rat v0.1 documentation</a> &raquo;</li>
+          <li><a href="code.html" >Code Documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Andy Mastbaum.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,156 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Generators &mdash; rat v0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="rat v0.1 documentation" href="index.html" />
+    <link rel="up" title="Code Documentation" href="code.html" />
+    <link rel="prev" title="Processors" href="processors.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="processors.html" title="Processors"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">rat v0.1 documentation</a> &raquo;</li>
+          <li><a href="code.html" accesskey="U">Code Documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="generators">
+<h1>Generators<a class="headerlink" href="#generators" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-rat.generators.dispatch">
+<span id="rat-generators-dispatch"></span><h2>rat.generators.dispatch<a class="headerlink" href="#module-rat.generators.dispatch" title="Permalink to this headline">¶</a></h2>
+<p>Utilies for reading events from a dispatcher stream.</p>
+</div>
+<div class="section" id="module-rat.generators.rootfile">
+<span id="rat-generators-rootfile"></span><h2>rat.generators.rootfile<a class="headerlink" href="#module-rat.generators.rootfile" title="Permalink to this headline">¶</a></h2>
+<p>Utilities for reading from TTrees in ROOT files.</p>
+<dl class="function">
+<dt id="rat.generators.rootfile.airfill_dsreader">
+<tt class="descclassname">rat.generators.rootfile.</tt><tt class="descname">airfill_dsreader</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/rat/generators/rootfile.html#airfill_dsreader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rat.generators.rootfile.airfill_dsreader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read events from an air-fill style packed ROOT file</p>
+<p>Returns an iterator over the PackedEvent objects in the <cite>PackEv</cite> tree in
+file <cite>filename</cite>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rat.generators.rootfile.dsreader">
+<tt class="descclassname">rat.generators.rootfile.</tt><tt class="descname">dsreader</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/rat/generators/rootfile.html#dsreader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rat.generators.rootfile.dsreader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read events from a RAT ROOT file</p>
+<p>Returns an iterator over the DS objects in the <cite>T</cite> tree in file <cite>filename</cite>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rat.generators.rootfile.packed_dsreader">
+<tt class="descclassname">rat.generators.rootfile.</tt><tt class="descname">packed_dsreader</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/rat/generators/rootfile.html#packed_dsreader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rat.generators.rootfile.packed_dsreader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read events from a packed ROOT file</p>
+<p>Returns an iterator over the PackedRec objects in the <cite>PackT</cite> tree in file
+<cite>filename</cite>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rat.generators.rootfile.tree_reader">
+<tt class="descclassname">rat.generators.rootfile.</tt><tt class="descname">tree_reader</tt><big>(</big><em>filename</em>, <em>tree</em>, <em>branch</em>, <em>obj</em><big>)</big><a class="reference internal" href="_modules/rat/generators/rootfile.html#tree_reader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rat.generators.rootfile.tree_reader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read data from the branch named <cite>branch</cite> of a ROOT tree named <cite>tree</cite>
+in a file <cite>filename</cite>. <cite>obj</cite> is a &#8220;reference&#8221; to an object of the type
+stored in the tree (cf. <cite>SetBranchAddress(branch, &amp;obj)</cite>).</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Generators</a><ul>
+<li><a class="reference internal" href="#module-rat.generators.dispatch">rat.generators.dispatch</a></li>
+<li><a class="reference internal" href="#module-rat.generators.rootfile">rat.generators.rootfile</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="processors.html"
+                        title="previous chapter">Processors</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/generators.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="processors.html" title="Processors"
+             >previous</a> |</li>
+        <li><a href="index.html">rat v0.1 documentation</a> &raquo;</li>
+          <li><a href="code.html" >Code Documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Andy Mastbaum.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

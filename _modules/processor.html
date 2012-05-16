@@ -1,0 +1,156 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>processor &mdash; rat v0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="rat v0.1 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">rat v0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for processor</h1><div class="highlight"><pre>
+<span class="sd">&#39;&#39;&#39;Processor-related classes.&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="ProcessorAbort"><a class="viewcode-back" href="../core.html#processor.ProcessorAbort">[docs]</a><span class="k">class</span> <span class="nc">ProcessorAbort</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;When raised by a processor, processing of this event is immediately</span>
+<span class="sd">    terminated and no further processors are run on this event.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ProcessorFail"><a class="viewcode-back" href="../core.html#processor.ProcessorFail">[docs]</a><span class="k">class</span> <span class="nc">ProcessorFail</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;When raised by a processor, signifies that the processor task failed,</span>
+<span class="sd">    but later processors are still executed.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Processor"><a class="viewcode-back" href="../core.html#processor.Processor">[docs]</a><span class="k">class</span> <span class="nc">Processor</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;A processor represents a chunk of analysis code that can be placed in</span>
+<span class="sd">    the event loop.</span>
+
+<span class="sd">    :param name: The name of the processor</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+<div class="viewcode-block" id="Processor.event"><a class="viewcode-back" href="../core.html#processor.Processor.event">[docs]</a>    <span class="k">def</span> <span class="nf">event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Called for every event.</span>
+<span class="sd">        </span>
+<span class="sd">        :param ev: The event</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">pass</span></div>
+<div class="viewcode-block" id="Processor.start_run"><a class="viewcode-back" href="../core.html#processor.Processor.start_run">[docs]</a>    <span class="k">def</span> <span class="nf">start_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Called once at the start of a run.&#39;&#39;&#39;</span>
+        <span class="k">pass</span></div>
+<div class="viewcode-block" id="Processor.end_run"><a class="viewcode-back" href="../core.html#processor.Processor.end_run">[docs]</a>    <span class="k">def</span> <span class="nf">end_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Called once at the end of a run.&#39;&#39;&#39;</span>
+        <span class="k">pass</span>
+</div></div>
+<div class="viewcode-block" id="ProcessorBlock"><a class="viewcode-back" href="../core.html#processor.ProcessorBlock">[docs]</a><span class="k">class</span> <span class="nc">ProcessorBlock</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;A processor block is a list of processors which are each called for</span>
+<span class="sd">    every event.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="ProcessorBlock.event"><a class="viewcode-back" href="../core.html#processor.ProcessorBlock.event">[docs]</a>    <span class="k">def</span> <span class="nf">event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ev</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Call the `event` methods of all processors in the block. Called</span>
+<span class="sd">        once per event.</span>
+
+<span class="sd">        :param ev: The event</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">processor</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">processor</span><span class="o">.</span><span class="n">event</span><span class="p">(</span><span class="n">ev</span><span class="p">)</span></div>
+<div class="viewcode-block" id="ProcessorBlock.start_run"><a class="viewcode-back" href="../core.html#processor.ProcessorBlock.start_run">[docs]</a>    <span class="k">def</span> <span class="nf">start_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Call the `start_run` methods for all processors in the block.</span>
+<span class="sd">        Called at the start of a run.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">processor</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">processor</span><span class="o">.</span><span class="n">start_run</span><span class="p">()</span></div>
+<div class="viewcode-block" id="ProcessorBlock.end_run"><a class="viewcode-back" href="../core.html#processor.ProcessorBlock.end_run">[docs]</a>    <span class="k">def</span> <span class="nf">end_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Call the `end_run` methods for all processors in the block.</span>
+<span class="sd">        Called at the end of a run.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">processor</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">processor</span><span class="o">.</span><span class="n">end_run</span><span class="p">()</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">rat v0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Andy Mastbaum.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

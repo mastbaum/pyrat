@@ -1,0 +1,161 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Overview &mdash; rat v0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="rat v0.1 documentation" href="index.html" />
+    <link rel="up" title="User’s Guide" href="userguide.html" />
+    <link rel="next" title="Tools" href="userguide_tools.html" />
+    <link rel="prev" title="User’s Guide" href="userguide.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="userguide_tools.html" title="Tools"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="userguide.html" title="User’s Guide"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">rat v0.1 documentation</a> &raquo;</li>
+          <li><a href="userguide.html" accesskey="U">User&#8217;s Guide</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goals">
+<h2>Goals<a class="headerlink" href="#goals" title="Permalink to this headline">¶</a></h2>
+<p>RAT (&#8220;RAT is an Analysis Tool&#8221;) is a framework that combines both Monte Carlo simulation of a detector with event-based analysis tasks, like reconstruction.</p>
+<p>The primary goals are:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Make it easy to analyze Monte Carlo-generated events as well as data from disk using the same software with only a few command changes. Even in the proposal/R&amp;D phase, where there is no real data, this is still useful for dumping Monte Carlo events to disk to be analyzed by another job. When there is real data, being able to do the analysis with the same code path as was used on Monte Carlo is very reassuring.</li>
+<li>Allow for a modular, user-controlled analysis of events. This includes allowing the user to selected which analysis tasks to perform (different fitters, pruning unneeded data from the event data structure, etc.). It should also be relatively straightforward for users to introduce their own code into the analysis process.</li>
+<li>Separate analysis into small tasks which can be developed asynchronously by different people, yet integrated with minimal pain.</li>
+<li>Wrap GEANT4 in a flexible application that allows users to accomplish many analysis without having to recompile RAT.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="design">
+<h2>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h2>
+<p>The overall design of RAT is much like other physics packages (such as SNOMAN): View analysis as a big loop, iterated through once for each event. The body of the loop is assembled by the user in their macro file as a list of &#8220;processors.&#8221; A processor is a self-contained module that takes an event as input and does some work on the event, possibly altering the contents of the event data structure. A fitting processor would add reconstruction information to the event structure, and an I/O processor would write the event to disk, but leave the data structure in memory unchanged. (The SNOMAN event loop actually allows for branching, which has not yet been implemented in RAT.)</p>
+<p>Processors can read and modify existing events, but where do the events originally come from? This is the job of event &#8220;producers.&#8221; A producer can be something like a Monte Carlo simulation.  For example, we might decide to simulate the following reaction: nubar + p -&gt; n + e+</p>
+<p>Given the delay between the observation of the positron and the neutron, this single physics event will be detected as (at least) two separate detector events. The job of the event producer is ultimately to generate physics events and hand them over to the processors selected by the user, one event at a time.  A DAQ simulation processor may convert the physics event into multiple triggered detector events.</p>
+<p>Other event generators are possible. Generators which read events from disk or over the network would function in a similar manner, creating event data structures in memory and handing them to the event processors one by one.</p>
+<p>The event-sequential nature of this computation model is both powerful and simple, but can be awkward for certain kinds of analyses. Multi-pass analyses, which must go through a list of events more than once, can be implemented in RAT without much difficulty as long as each pass is sequential. Time-correlation processors can also be implemented if the processor buffers some data internally. A processor that needs full random access to the event stream cannot be implemented efficiently in RAT. The events should be dumped to disk and analyzed in some other program (such as ROOT).</p>
+</div>
+<div class="section" id="relationships-with-other-software">
+<h2>Relationships with Other Software<a class="headerlink" href="#relationships-with-other-software" title="Permalink to this headline">¶</a></h2>
+<p>RAT makes use of several other software packages to do the heavy-lifting:</p>
+<blockquote>
+<div><ul class="simple">
+<li>CLHEP - CLHEP is a library containing classes useful to physics software, such as 3D vectors and random number generators. It is also used by GEANT4.</li>
+<li>GEANT4 - While GEANT4 is intended to simulate particle interactions in detectors, RAT does not use it directly for that purpose, delegating that to GLG4sim. Instead, RAT makes direct use of the GEANT4 command interpreter to provide a language for both interactive use and executing macro files.</li>
+<li>ROOT - ROOT is used to load and save objects to/from disk and over the network.</li>
+<li>GLG4sim - This package is a generalized version of the KamLAND Monte Carlo, intended to simulate KamLAND-like neutrino experiments with GEANT4. GLG4sim is a self-contained application from which RAT was forked.  We still use some GLG4sim classes in RAT, although these are slowly being replaced over time.</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Overview</a><ul>
+<li><a class="reference internal" href="#goals">Goals</a></li>
+<li><a class="reference internal" href="#design">Design</a></li>
+<li><a class="reference internal" href="#relationships-with-other-software">Relationships with Other Software</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="userguide.html"
+                        title="previous chapter">User&#8217;s Guide</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="userguide_tools.html"
+                        title="next chapter">Tools</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/userguide_overview.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="userguide_tools.html" title="Tools"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="userguide.html" title="User’s Guide"
+             >previous</a> |</li>
+        <li><a href="index.html">rat v0.1 documentation</a> &raquo;</li>
+          <li><a href="userguide.html" >User&#8217;s Guide</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Andy Mastbaum.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

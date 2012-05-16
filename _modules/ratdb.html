@@ -1,0 +1,193 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ratdb &mdash; rat v0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="rat v0.1 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">rat v0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for ratdb</h1><div class="highlight"><pre>
+<span class="sd">&#39;&#39;&#39;Utilties for accessing the database.&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">rat.core</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<div class="viewcode-block" id="DBTable"><a class="viewcode-back" href="../core.html#ratdb.DBTable">[docs]</a><span class="k">class</span> <span class="nc">DBTable</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Holds the contents of a RATDB table in memory.</span>
+<span class="sd">    </span>
+<span class="sd">    :param table: `(optional)` Dictionary from which to constuct the table</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="nb">dict</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s">&#39;name&#39;</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">else</span> <span class="s">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;index&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s">&#39;index&#39;</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">else</span> <span class="s">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_begin</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;run_begin&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s">&#39;run_begin&#39;</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_end</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s">&#39;run_end&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s">&#39;run_end&#39;</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">else</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="DBTable.is_valid_run"><a class="viewcode-back" href="../core.html#ratdb.DBTable.is_valid_run">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Returns true if this table is valid for the specified run.</span>
+<span class="sd">        </span>
+<span class="sd">        :param run: Run number to check</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">run</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_begin</span> <span class="ow">and</span> <span class="n">run</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_end</span>
+</div>
+<div class="viewcode-block" id="DBTable.set_user"><a class="viewcode-back" href="../core.html#ratdb.DBTable.set_user">[docs]</a>    <span class="k">def</span> <span class="nf">set_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set this as a user-override table.&#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_begin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_end</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</div>
+<div class="viewcode-block" id="DBTable.is_user"><a class="viewcode-back" href="../core.html#ratdb.DBTable.is_user">[docs]</a>    <span class="k">def</span> <span class="nf">is_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Returns true if validity range flags this as a user-plane table.&#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_begin</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_end</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span>
+</div>
+<div class="viewcode-block" id="DBTable.set_default"><a class="viewcode-back" href="../core.html#ratdb.DBTable.set_default">[docs]</a>    <span class="k">def</span> <span class="nf">set_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set this as a default table.&#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_begin</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_end</span> <span class="o">=</span> <span class="mi">0</span>
+</div>
+<div class="viewcode-block" id="DBTable.is_default"><a class="viewcode-back" href="../core.html#ratdb.DBTable.is_default">[docs]</a>    <span class="k">def</span> <span class="nf">is_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Returns true if validity range flags this as a default-plane table.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_begin</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_end</span> <span class="o">==</span> <span class="mi">0</span>
+</div>
+<div class="viewcode-block" id="DBTable.register"><a class="viewcode-back" href="../core.html#ratdb.DBTable.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Add a callback function, which will be called when the value of the</span>
+<span class="sd">        specified key is modified. This may be used to reload database values</span>
+<span class="sd">        in a processor, for example.</span>
+
+<span class="sd">        :param key: Key to watch for changes</span>
+<span class="sd">        :param callback: Function to call when a change occurs</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set the item and fire any callbacks.&#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DBTable</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__setitem__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">callbacks</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="n">callbacks</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                <span class="n">callback</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DBTable.save"><a class="viewcode-back" href="../core.html#ratdb.DBTable.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Save this table to a file.</span>
+<span class="sd">        </span>
+<span class="sd">        :param filename: Name of file to write table to</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+</div></div>
+<div class="viewcode-block" id="DB"><a class="viewcode-back" href="../core.html#ratdb.DB">[docs]</a><span class="k">class</span> <span class="nc">DB</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;RATDB is the database of constants used by RAT for all adjustable</span>
+<span class="sd">    parameters, including physical properties of materials, detector geometry,</span>
+<span class="sd">    calibration constants, lookup tables, and control parameters that specify</span>
+<span class="sd">    how processing should be done.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="DB.add_table"><a class="viewcode-back" href="../core.html#ratdb.DB.add_table">[docs]</a>    <span class="k">def</span> <span class="nf">add_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Add a `DBTable` to this database.</span>
+<span class="sd">        </span>
+<span class="sd">        :param table: The table</span>
+<span class="sd">        :param key: `(optional)` Key of table. Computed automatically if not provided</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">table</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">table</span><span class="o">.</span><span class="n">run_begin</span><span class="p">,</span> <span class="n">table</span><span class="o">.</span><span class="n">run_end</span><span class="p">,)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s">&#39;Replacing table&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="s">&#39;in database.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">table</span>
+</div>
+<div class="viewcode-block" id="DB.load_file"><a class="viewcode-back" href="../core.html#ratdb.DB.load_file">[docs]</a>    <span class="k">def</span> <span class="nf">load_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Read a table from a file and add it to this DB.</span>
+
+<span class="sd">        :param filename: Name of file to read table from</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">DBTable</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">DBTable</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">rat v0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Andy Mastbaum.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
