@@ -1,12 +1,11 @@
-'''Import ROOT-related modules.
+'''Import ROOT-related modules.'''
 
-This instance of ROOT should be used throughout rat.
-'''
 import os
 import ROOT
 
-G4SYSTEM = os.enivron["G4SYSTEM"]
-ROOT.gSystem.Load("libRATEvent_" + G4SYSTEM)
+G4SYSTEM = os.getenv("G4SYSTEM")
 
-import ROOT.RAT
+if G4SYSTEM is not None:
+    ROOT.gSystem.Load("libRATEvent_" + G4SYSTEM)
+    import ROOT.RAT
 

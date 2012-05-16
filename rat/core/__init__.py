@@ -7,7 +7,7 @@ import ratdb
 db = ratdb.DB()
 
 # ROOT with RAT event dictionary (for now!)
-#from rootimport import ROOT
+from rootimport import ROOT
 
 # logging to file
 import log

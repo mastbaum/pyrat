@@ -4,6 +4,10 @@ from rat.core import *
 import json
 
 class DBTable(dict):
+    '''Holds the contents of a RATDB table in memory.
+    
+    :param table: `(optional)` Dictionary from which to constuct the table
+    '''
     def __init__(self, table={}):
         dict.__init__(self, table)
         self.name = self['name'] if 'name' in self else ''
@@ -14,6 +18,10 @@ class DBTable(dict):
         self.callbacks = {}
 
     def is_valid_run(self, run):
+        '''Returns true if this table is valid for the specified run.
+        
+        :param run: Run number to check
+        '''
         return run >= self.run_begin and run <= self.run_end
 
     def set_user(self):
@@ -39,6 +47,9 @@ class DBTable(dict):
         '''Add a callback function, which will be called when the value of the
         specified key is modified. This may be used to reload database values
         in a processor, for example.
+
+        :param key: Key to watch for changes
+        :param callback: Function to call when a change occurs
         '''
         self.callbacks.setdefault(key, []).append(callback)
 
@@ -51,7 +62,10 @@ class DBTable(dict):
                 callback(value)
 
     def save(self, filename):
-        '''Save this table to a file.'''
+        '''Save this table to a file.
+        
+        :param filename: Name of file to write table to
+        '''
         with open(filename, 'w') as f:
             f.write(json.dumps(self))
 
@@ -62,6 +76,11 @@ class DB(dict):
     how processing should be done.
     '''
     def add_table(self, table, key=None):
+        '''Add a `DBTable` to this database.
+        
+        :param table: The table
+        :param key: `(optional)` Key of table. Computed automatically if not provided
+        '''
         if key is None:
             key = (table.name, table.index, table.run_begin, table.run_end,)
         if key in self:
@@ -69,6 +88,10 @@ class DB(dict):
         self[key] = table
 
     def load_file(self, filename):
+        '''Read a table from a file and add it to this DB.
+
+        :param filename: Name of file to read table from
+        '''
         with open(filename) as f:
             data = json.loads(f.read())
 

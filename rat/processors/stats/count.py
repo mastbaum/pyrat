@@ -3,6 +3,10 @@ from rat.core import *
 from rat.core import db
 
 class Count(Processor):
+    '''Counts the number of events processed.
+    
+    :param interval: Count prints out a message every interval'th event
+    '''
     def __init__(self, interval=None):
         Processor.__init__(self, 'count')
         self.interval = interval

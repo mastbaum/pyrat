@@ -1,6 +1,6 @@
 '''Utilities for reading from TTrees in ROOT files.'''
 
-from rootimport import ROOT
+from rat.core import *
 
 def tree_reader(filename, tree, branch, obj):
     '''Read data from the branch named `branch` of a ROOT tree named `tree`
