@@ -1,4 +1,4 @@
-rat.core
+RAT Core
 ========
 
 rat.core.log

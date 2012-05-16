@@ -17,10 +17,9 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   core
-   processors
-   generators
+   userguide
    progress
+   code
 
 Indices and tables
 ==================
