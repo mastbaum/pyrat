@@ -17,3 +17,7 @@ warn= log.logging.warn
 error = log.logging.error
 critical = log.logging.critical
 
+# signal handling
+import signal_handler
+handler = signal_handler.SignalHandler()
+
